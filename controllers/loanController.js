@@ -1,12 +1,10 @@
 function loanController(Loan){
-    function post(req, res){
-        // const loan = new Loan(req.body);
-    }
-
-    function get(req, res){
-        const {query} = req;
+    function index(req, res){
+        const { query } = req;
+        console.log(query);
         // const query = {};
-        if(req.query.rate){
+        // We will check if there are any query strings being passed
+        if(req.query.rate) {
             query.rate = req.query.rate;
         }
         if(req.query.status){
@@ -19,27 +17,31 @@ function loanController(Loan){
             query.user_id = req.query.user_id;
         }
 
-        Loan.find((err, loans)=>{
-            if(err){
-                return res.send(err);
-            } else{
-                return res.json(loans);
-            }
-        });
+        // Using the model to find the loan, 
+        // If no query string is passed then it returns the whole collections in the database
         Loan.find(query, (err, loans) => {
             console.log(`this is the query ${query}`);
             if(err){
                 res.send(err);
             }
             const returnLoans = loans.map((loan) => {
-                console.log('In the return loan');
                 let newLoan = loan.toJSON();
                 return newLoan;
             });
             return res.json(returnLoans);
         });
     }
-    return {post, get};
+
+    function store(req, res){
+        const loan = new Loan(req.body);
+    }
+
+    function show(req, res){
+        const returnLoan = req.loan.toJSON();
+        res.json(returnLoan);
+    }
+   
+    return {store, index, show};
 }
 
 module.exports = loanController;
