@@ -9,15 +9,11 @@ if(process.env.ENV === 'Test'){
     const db = mongoose.connect('mongodb://localhost/laonappdb_Test');
   }else{
     console.log('This is for real')
-    // const db = mongoose.connect('mongodb://localhost/loanappdb');
     const db = mongoose.connect('mongodb://localhost/loanappdb');
   }
 
 const Loan = require('./models/loan');
 const loanRouter = require('./routes/loanRoute')(Loan);
-// const loanRouter = require('./routes/loanRoute');
-
-// loanRouter(app);
 
 app.use('/api', loanRouter);
 
