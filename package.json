@@ -4,6 +4,7 @@
   "description": "",
   "main": "index.js",
   "scripts": {
+    "lint": "eslint",
     "start": "nodemon app.js",
     "test": "echo \"Error: no test specified\" && exit 1"
   },
@@ -24,5 +25,10 @@
       "node_modules/**/node_modules"
     ],
     "delay": "2500"
+  },
+  "devDependencies": {
+    "eslint": "^5.16.0",
+    "eslint-config-airbnb-base": "^13.2.0",
+    "eslint-plugin-import": "^2.18.0"
   }
 }
