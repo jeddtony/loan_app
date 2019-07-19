@@ -5,11 +5,12 @@ const {Schema} = mongoose;
 const userModel = new Schema({
     name: {type: String},
     email: {type: String},
+    firstName: {type: String},
+    lastName: {type: String},
     password: {type: String},
     address: {type: String},
-    occupation: {type: String},
-    office_address: {type: String},
-    phone_number: {type: String}
+    status: {type: String},
+    isAdmin: {type: Boolean, default: false}
 });
 
 module.exports = mongoose.model('User', userModel);
