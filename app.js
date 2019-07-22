@@ -1,5 +1,6 @@
 const express = require('express');
 const mongoose = require('mongoose');
+const bodyparser = require('body-parser');
 require('dotenv').config();
 
 const app = express();
@@ -10,12 +11,19 @@ if(process.env.ENV === 'Test'){
   }else{
     console.log('This is for real')
     const db = mongoose.connect('mongodb://localhost/loanappdb');
+    console.log('connected to the db');
   }
 
-const Loan = require('./models/loan');
+const Loan = require('./models/Loan');
+const User = require('./models/user');
 const loanRouter = require('./routes/loanRoute')(Loan);
+const authRouter = require('./routes/authRoute')(User);
+
+app.use(bodyparser.urlencoded({extended: true}));
+app.use(bodyparser.json());
 
 app.use('/api', loanRouter);
+app.use('/auth', authRouter);
 
 app.get('/', (req, res) => {
     res.send('Welcome to my Node API');
