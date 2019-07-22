@@ -8,9 +8,8 @@ const userModel = new Schema({
     email: {type: String, unique:true, required:true},
     password: {type: String, required: true},
     address: {type: String},
-    occupation: {type: String},
-    office_address: {type: String},
-    phone_number: {type: String}
+    status: {type: String},
+    isAdmin: {type: Boolean, default: false}
 });
 
 
