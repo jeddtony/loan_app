@@ -33,10 +33,47 @@ function routes(User){
                 res.json({success: true, msg: 'Successfully created a new user'});
             });       
         })
-        .catch(error => error);
-        
+        .catch(error => error); 
     }
 });
+
+    router.route('/signin')
+    .post((req, res) =>{
+        User.findOne({
+            email: req.body.email
+        }, function(err, user){
+            if(err) throw err;
+            
+            if(!user){
+                res.status(401).send({success: false, msg: 'Authentication failed. User not found'});
+            } else{
+                // check if password matches
+              bcrypt.compare(req.body.password, user.password, function(err, res){
+                if(res && !err){
+                    console.log('The user is signed in');
+                    var token = jwt.sign(user.toJSON())
+                }    
+                });
+               
+            }
+        })
+    });
+    router.route('/profile')
+    .all((req, res, next) => {
+        if(req.user){
+            next();
+        } else{
+            res.redirect('/');
+        }
+    })
+    .get((req, res)=>{
+        console.log('The authentication passed');
+        res.json(req.user);
+    });
+
+    router.route('/failure').get((req, res) => {
+        res.send('Ok this failed');
+    });
 
 return router;
 }

@@ -1,6 +1,8 @@
 const express = require('express');
 const mongoose = require('mongoose');
 const bodyparser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const session = require('express-session');
 require('dotenv').config();
 
 const app = express();
@@ -21,9 +23,13 @@ const authRouter = require('./routes/authRoute')(User);
 
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
+app.use(cookieParser());
+app.use(session({secret: 'library'}));
+require('./config/passport.js')(app);
 
 app.use('/api', loanRouter);
 app.use('/auth', authRouter);
+
 
 app.get('/', (req, res) => {
     res.send('Welcome to my Node API');
