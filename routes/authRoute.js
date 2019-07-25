@@ -48,16 +48,28 @@ function routes(User){
                 res.status(401).send({success: false, msg: 'Authentication failed. User not found'});
             } else{
                 // check if password matches
-              bcrypt.compare(req.body.password, user.password, function(err, res){
-                if(res && !err){
+              bcrypt.compare(req.body.password, user.password, function(err, ress){
+                if(ress && !err){
                     console.log('The user is signed in');
-                    var token = jwt.sign(user.toJSON())
+                    // var token = jwt.sign(user.toJSON())
+                    jwt.sign({user}, 'secretkey', {expiresIn: '300s'},  (err, token) => {
+                        res.json({
+                            token
+                        })
+                    })
                 }    
                 });
                
             }
         })
     });
+
+    // For the signout
+    router.get('/signout', passport.authenticate('jwt', { session: false}), function(req, res) {
+        req.logout();
+        res.json({success: true, msg: 'Sign out successfully.'});
+      });
+
     router.route('/profile')
     .all((req, res, next) => {
         if(req.user){
@@ -78,4 +90,25 @@ function routes(User){
 return router;
 }
 
+// FORMAT OF TOKEN
+// Authorization: Bearer <access_token>
+// verify token
+function verifyToken(req, res, next){
+    // Get auth header value or actual token
+    const bearerHeader = req.headers['authorization'];
+    // check if bearer is undefined
+    if(typeof bearerHeader !== 'undefined'){
+      // Split at the space
+      const bearer = bearerHeader.split(' ');
+      // Get token from array
+      const bearerToken = bearer[1];
+      // Set the token
+      req.token = bearerToken;
+      // Next middleware
+      next();  
+    }else{
+        // Forbidden
+        res.sendStatus(403);
+    }
+}
 module.exports = routes;
