@@ -65,7 +65,7 @@ function routes(User){
     });
 
     // For the signout
-    router.get('/signout', passport.authenticate('jwt', { session: false}), function(req, res) {
+    router.get('/signout', verifyToken, function(req, res) {
         req.logout();
         res.json({success: true, msg: 'Sign out successfully.'});
       });
