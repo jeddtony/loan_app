@@ -20,6 +20,7 @@ const Loan = require('./models/Loan');
 const User = require('./models/user');
 const loanRouter = require('./routes/loanRoute')(Loan);
 const authRouter = require('./routes/authRoute')(User);
+const factoryRouter = require('./routes/factoryroutes')(Loan, User);
 
 app.use(bodyparser.urlencoded({extended: true}));
 app.use(bodyparser.json());
@@ -29,6 +30,7 @@ require('./config/passport.js')(app);
 
 app.use('/api', loanRouter);
 app.use('/auth', authRouter);
+app.use('/seed', factoryRouter);
 
 
 app.get('/', (req, res) => {
